@@ -1,11 +1,13 @@
 version: 0.0
 os: linux
 files:
-  - source: /
-    destination: /home/ec2-user/my-python-html-app
-file_exists_behavior: OVERWRITE
+  - source: /    # Source directory in S3 or GitHub
+    destination: /home/ec2-user/app   # Destination directory on the EC2 instance
 hooks:
   AfterInstall:
-    - location: /deploy.sh
+    - location: scripts/install_dependencies.sh
+      timeout: 300
+      runas: ec2-user
+    - location: scripts/configure_server.sh
       timeout: 300
       runas: ec2-user
