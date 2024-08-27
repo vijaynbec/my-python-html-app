@@ -1,7 +1,7 @@
 version: 0.0
 os: linux
 files:
-  - source: /index.html   # Source directory in S3 or GitHub
+  - source: /https://github.com/vijaynbec/my-python-html-app.git   # Source directory in S3 or GitHub
     destination: /home/ec2-user/app   # Destination directory on the EC2 instance
 hooks:
   AfterInstall:
