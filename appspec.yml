@@ -1,13 +1,23 @@
 version: 0.0
 os: linux
-files:
-  - source: /https://github.com/vijaynbec/my-python-html-app.git   # Source directory in S3 or GitHub
-    destination: /home/ec2-user/app   # Destination directory on the EC2 instance
+
 hooks:
+  ApplicationStop:
+    - location: scripts/application_stop.sh
+      timeout: 300
+      runas: root
+
+  BeforeInstall:
+    - location: scripts/before_install.sh
+      timeout: 300
+      runas: root
+
   AfterInstall:
-    - location: scripts/install_dependencies.sh
+    - location: scripts/after_install.sh
       timeout: 300
-      runas: ec2-user
-    - location: scripts/configure_server.sh
+      runas: root
+      
+  ApplicationStart:
+    - location: scripts/application_start.sh
       timeout: 300
-      runas: ec2-user
+      runas: root
