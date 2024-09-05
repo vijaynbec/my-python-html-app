@@ -1,28 +1,29 @@
 #!/bin/bash
 
-# Enable debugging
-set -x
+# Variables
+IMAGE_NAME="123456789.dkr.ecr.us-east-1.amazonaws.com/flask_image:latest"
+CONTAINER_NAME="flask_app"
+PORT_MAPPING="5000:5000"
 
-# Authenticate Docker to ECR
-echo "Authenticating Docker to ECR..."
-aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 426924142575.dkr.ecr.us-east-1.amazonaws.com
+echo "Checking Docker service..."
+sudo systemctl status docker || { echo "Docker service is not running."; exit 1; }
 
-# Pull the Docker image
 echo "Pulling Docker image..."
-docker pull 426924142575.dkr.ecr.us-east-1.amazonaws.com/flask_image:latest
-echo "Running container..."
-docker run --name flask_app -d -p 5000:5000 426924142575.dkr.ecr.us-east-1.amazonaws.com/flask_image:latest
-# #!/bin/bash
+docker pull $IMAGE_NAME
+if [ $? -ne 0 ]; then
+  echo "Error: Failed to pull Docker image $IMAGE_NAME."
+  exit 1
+fi
 
-# # Authenticate Docker to ECR
-# echo "Authenticating Docker to ECR..."
-# aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 426924142575.dkr.ecr.us-east-1.amazonaws.com
+echo "Stopping and removing existing container..."
+docker stop $CONTAINER_NAME || true
+docker rm $CONTAINER_NAME || true
 
-# # Pull the Docker image
-# echo "Pulling Docker image..."
-# docker pull 426924142575.dkr.ecr.us-east-1.amazonaws.com/flask_image:latest
+echo "Running Docker container..."
+docker run --name $CONTAINER_NAME -d -p $PORT_MAPPING $IMAGE_NAME
+if [ $? -ne 0 ]; then
+  echo "Error: Failed to start Docker container $CONTAINER_NAME."
+  exit 1
+fi
 
-# # Run the Docker container
-# echo "Running Docker container..."
-# docker run -d -p 80:80 426924142575.dkr.ecr.us-east-1.amazonaws.com/flask_image:latest
-
+echo "Docker container started successfully."
