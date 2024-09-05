@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Variables
-IMAGE_NAME="123456789.dkr.ecr.us-east-1.amazonaws.com/flask_image:latest"
+IMAGE_NAME="426924142575.dkr.ecr.us-east-1.amazonaws.com/flask_image:latest"
 CONTAINER_NAME="flask_app"
 PORT_MAPPING="5000:5000"
 
