@@ -12,10 +12,13 @@ if ! command -v docker &> /dev/null; then
     # Start Docker
     sudo systemctl start docker
     sudo systemctl enable docker
+	sudo systemctl status docker
     sudo apt-get install awscli -y
 
     # Add the current user to Docker group
     sudo usermod -aG docker ubuntu
+	aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 426924142575.dkr.ecr.us-east-1.amazonaws.com
+	docker run --name flask_app -d -p 5000:5000 426924142575.dkr.ecr.us-east-1.amazonaws.com/flask_image:latest
     echo "Docker installed successfully."
 fi
     echo "Docker Found"
